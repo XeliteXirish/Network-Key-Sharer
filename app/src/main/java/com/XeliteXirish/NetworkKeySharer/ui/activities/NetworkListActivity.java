@@ -186,6 +186,10 @@ public class NetworkListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_qr_reader:
+                Intent qrReaderIntent = new Intent(this, QrCodeReaderActivity.class);
+                startActivity(qrReaderIntent);
+                return true;
             case R.id.action_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 startActivity(settingsIntent);

@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.activities.NetworkListActivity">
     <item
+        android:id="@+id/action_qr_reader"
+        android:title="@string/action_qrReader"
+        android:orderInCategory="98"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:title="@string/settings"
         android:orderInCategory="99"

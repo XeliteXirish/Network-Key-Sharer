@@ -133,12 +133,10 @@ public class ConfirmConnectToNetworkActivity extends Activity {
             String action = intent.getAction();
             if (action.equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
                 int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
-                if (wifiConfiguration != null
-                        && wifiState == WifiManager.WIFI_STATE_ENABLED) {
+                if (wifiConfiguration != null && wifiState == WifiManager.WIFI_STATE_ENABLED) {
                     if (getAndClearEnableWifiInProgress()) {
                         doConnect(
-                                (WifiManager) ConfirmConnectToNetworkActivity.this
-                                        .getSystemService(Context.WIFI_SERVICE));
+                                (WifiManager) ConfirmConnectToNetworkActivity.this.getSystemService(Context.WIFI_SERVICE));
                     }
                 }
             }
