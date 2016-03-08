@@ -1,0 +1,16 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="com.XeliteXirish.NetworkKeySharer.ui.activities.SettingsActivity$PinLockFragment"
+        android:icon="@drawable/ic_lock_black_24dp"
+        android:title="@string/pin_lock_title"
+        android:summary="@string/pin_lock_summary" />
+
+   <!-- <header
+        android:fragment="com.XeliteXirish.NetworkKeySharer.ui.activities.SettingsActivity$StyleFragment"
+        android:title="@string/style_fragment_title"
+        android:summary="@string/style_fragment_summery" />-->
+
+</preference-headers>

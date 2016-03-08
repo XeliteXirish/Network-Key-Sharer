@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Light Theme -->
+    <color name="colorPrimary">#303030</color>
+    <color name="colorPrimaryDark">#282828</color>
+    <color name="colorAccent">#3367d6</color>
+    <color name="colorAccentDark">#303F9F</color>
+
+    <!-- Dark Theme -->
+    <color name="darkColorPrimary">#3367d6</color>
+    <color name="darkColorPrimaryDark">#303F9F</color>
+    <color name="darkColorAccent">#303030</color>
+
+    <color name="network_list_background">@color/white</color>
+
+    <color name="passcodelock_background">@color/colorPrimary</color>
+    <color name="passcodelock_prompt_text_color">@android:color/primary_text_dark</color>
+    <color name="passcodelock_field_background_color">@color/white</color>
+    <color name="passcodelock_field_text_color">@color/colorAccent</color>
+    <color name="passcodelock_field_hint_text_color">@color/colorAccent</color>
+    <color name="passcodelock_button_background_color">@android:color/transparent</color>
+    <color name="passcodelock_button_text_color">@color/colorAccent</color>
+</resources>
