@@ -1,11 +1,12 @@
 package com.XeliteXirish.NetworkKeySharer.ui.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.PointF;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,7 +15,7 @@ import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 
 import java.util.List;
 
-public class QrCodeReaderActivity extends Activity implements QRCodeReaderView.OnQRCodeReadListener{
+public class QrCodeReaderActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener{
 
     public QRCodeReaderView qrCodeReaderView;
 
@@ -23,8 +24,15 @@ public class QrCodeReaderActivity extends Activity implements QRCodeReaderView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_reader);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+
         this.qrCodeReaderView = (QRCodeReaderView) findViewById(R.id.qrReaderView);
         this.qrCodeReaderView.setOnQRCodeReadListener(this);
+
+        //removeHome("EULXCKQY");
     }
 
     @Override
@@ -41,6 +49,12 @@ public class QrCodeReaderActivity extends Activity implements QRCodeReaderView.O
 
     @Override
     public void onQRCodeRead(String encoded, PointF[] points) {
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
+        for(int x = 0; x < networks.size(); x++){
+            Log.i("NKS", networks.get(x).SSID);
+        }
+
         connectToWifi(getDataFromQr(encoded));
     }
 
@@ -82,6 +96,9 @@ public class QrCodeReaderActivity extends Activity implements QRCodeReaderView.O
         String networkSSID = details[1];
         String networkPassword = details[2];
 
+        boolean duplicate = false;
+
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         WifiConfiguration wifiConfig = new WifiConfiguration();
         wifiConfig.SSID = "\"" + networkSSID + "\"";
 
@@ -97,8 +114,17 @@ public class QrCodeReaderActivity extends Activity implements QRCodeReaderView.O
         }else if(networkAuth.equalsIgnoreCase("none")) {
             wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
         }
-        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        wifiManager.addNetwork(wifiConfig);
+
+        for(int x = 0; x < wifiManager.getConfiguredNetworks().size(); x++){
+            if(wifiManager.getConfiguredNetworks().get(x).SSID.equalsIgnoreCase("\"" + networkSSID + "\"")){
+                Toast.makeText(this, "Network already added", Toast.LENGTH_SHORT).show();
+                duplicate = true;
+                return;
+            }
+        }
+        if(!duplicate) {
+            wifiManager.addNetwork(wifiConfig);
+        }
 
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
         for(WifiConfiguration i : list){
@@ -109,6 +135,17 @@ public class QrCodeReaderActivity extends Activity implements QRCodeReaderView.O
                 wifiManager.reconnect();
 
                 break;
+            }
+        }
+    }
+
+    public void removeHome(String ssid){
+        String newSSID = "\"" + ssid + "\"";
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
+        for(int x = 0; x < networks.size(); x++){
+            if(networks.get(x).SSID.equalsIgnoreCase(newSSID)){
+                wifiManager.removeNetwork(networks.get(x).networkId);
             }
         }
     }

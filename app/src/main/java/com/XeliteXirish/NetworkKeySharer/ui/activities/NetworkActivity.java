@@ -395,8 +395,7 @@ public class NetworkActivity extends AppCompatActivity {
         if (isInWriteMode) {
             /* Write tag */
             Log.d(TAG, "Writing tag");
-            if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
-                    || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+            if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action) || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
 
                 if (NfcUtils.writeTag(network, tag)) {
                     Toast.makeText(this, R.string.nfc_tag_written, Toast.LENGTH_LONG)
