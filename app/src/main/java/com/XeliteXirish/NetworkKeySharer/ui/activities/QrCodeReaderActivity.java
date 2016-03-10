@@ -133,7 +133,7 @@ public class QrCodeReaderActivity extends AppCompatActivity{
         textViewAuth.setText(networkAuth);
     }
 
-    public void connectToWifi(String[] details){ //TODO popups
+    public void connectToWifi(String[] details){
         Toast.makeText(this, "Starting to connect", Toast.LENGTH_SHORT).show();
 
         String networkAuth = details[0];
