@@ -104,9 +104,9 @@ public class QrCodeReaderActivity extends AppCompatActivity{
         String networkAuth = details[0];
 
         AlertDialog connectNetworkDialog = new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.confirm_connection_title_connect_to_network))
+                .setTitle(getString(R.string.confirm_connection_title_connect_to_network) + "?")
                 .setView(R.layout.dialog_connect_to_network)
-                .setPositiveButton(R.string.connected_to_wifi, new DialogInterface.OnClickListener() {
+                .setPositiveButton("Connect to WiFi", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         connectToWifi(details);
