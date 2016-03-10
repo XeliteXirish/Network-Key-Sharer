@@ -1,13 +1,18 @@
 package com.XeliteXirish.NetworkKeySharer.ui.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.PointF;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.XeliteXirish.NetworkKeySharer.R;
@@ -49,13 +54,7 @@ public class QrCodeReaderActivity extends AppCompatActivity implements QRCodeRea
 
     @Override
     public void onQRCodeRead(String encoded, PointF[] points) {
-        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
-        for(int x = 0; x < networks.size(); x++){
-            Log.i("NKS", networks.get(x).SSID);
-        }
-
-        connectToWifi(getDataFromQr(encoded));
+        showConfirmationBox(getDataFromQr(encoded));
     }
 
     @Override
@@ -89,7 +88,39 @@ public class QrCodeReaderActivity extends AppCompatActivity implements QRCodeRea
         return details;
     }
 
-    public void connectToWifi(String[] details){
+    public void showConfirmationBox(final String[] details){
+        String networkSSID = details[1];
+        String networkPassword = details[2];
+        String networkAuth = details[0];
+
+        AlertDialog connectNetworkDialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.confirm_connection_title_connect_to_network))
+                .setView(R.layout.dialog_connect_to_network)
+                .setPositiveButton(R.string.connected_to_wifi, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        connectToWifi(details);
+                    }
+                })
+                .setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create();
+        connectNetworkDialog.show();
+
+        TextView textViewSSID = (TextView) connectNetworkDialog.findViewById(R.id.textViewSSID);
+        TextView textViewPassword = (TextView) connectNetworkDialog.findViewById(R.id.textViewPassword);
+        TextView textViewAuth = (TextView) connectNetworkDialog.findViewById(R.id.textViewAuth);
+
+        textViewSSID.setText(networkSSID);
+        textViewPassword.setText(networkPassword);
+        textViewAuth.setText(networkAuth);
+    }
+
+    public void connectToWifi(String[] details){ //TODO popups
         Toast.makeText(this, "Starting to connect", Toast.LENGTH_SHORT).show();
 
         String networkAuth = details[0];
