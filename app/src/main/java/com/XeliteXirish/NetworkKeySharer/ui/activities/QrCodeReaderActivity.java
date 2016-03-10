@@ -55,6 +55,7 @@ public class QrCodeReaderActivity extends AppCompatActivity{
 
         this.barcodeView = (CompoundBarcodeView) findViewById(R.id.barcode_scanner);
         this.barcodeView.decodeSingle(callback);
+
     }
 
     @Override
