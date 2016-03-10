@@ -111,7 +111,7 @@ public class NetworkAdapter extends RecyclerView.Adapter<NetworkAdapter.ViewHold
                     if(random.nextInt(5) == 0) {
                         interstitialAd.show();
                     }else{
-                        interstitialAd.show();
+                        continueOnClick();
                     }
                 }else{
                     continueOnClick();

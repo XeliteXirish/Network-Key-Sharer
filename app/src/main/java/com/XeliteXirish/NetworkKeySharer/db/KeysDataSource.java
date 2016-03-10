@@ -90,11 +90,9 @@ public class KeysDataSource {
                 KeysContract.WifiKeys.COLUMN_NAME_AUTH_TYPE,
                 KeysContract.WifiKeys.COLUMN_NAME_KEY
         };
-        String selection = KeysContract.WifiKeys.COLUMN_NAME_SSID + " = ? AND " +
-                KeysContract.WifiKeys.COLUMN_NAME_AUTH_TYPE + " = ?";
+        String selection = KeysContract.WifiKeys.COLUMN_NAME_SSID + " = ? AND " + KeysContract.WifiKeys.COLUMN_NAME_AUTH_TYPE + " = ?";
         String[] selectionArgs = {
-                ssid,
-                authType.name()
+                ssid, authType.name()
         };
 
         // How you want the results sorted in the resulting Cursor
@@ -143,11 +141,9 @@ public class KeysDataSource {
     public int removeWifiKey(String ssid, AuthType authType) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String whereClause = KeysContract.WifiKeys.COLUMN_NAME_SSID + " = ? AND " +
-                KeysContract.WifiKeys.COLUMN_NAME_AUTH_TYPE + " = ?";
+        String whereClause = KeysContract.WifiKeys.COLUMN_NAME_SSID + " = ? AND " + KeysContract.WifiKeys.COLUMN_NAME_AUTH_TYPE + " = ?";
         String[] whereArgs = {
-                ssid,
-                authType.name()
+                ssid, authType.name()
         };
 
         return db.delete(KeysContract.WifiKeys.TABLE_NAME, whereClause, whereArgs);

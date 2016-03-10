@@ -109,7 +109,11 @@ public class QrCodeReaderActivity extends AppCompatActivity implements QRCodeRea
                     }
                 })
                 .create();
-        connectNetworkDialog.show();
+        if(connectNetworkDialog.isShowing()) {
+
+        }else{
+            connectNetworkDialog.show();
+        }
 
         TextView textViewSSID = (TextView) connectNetworkDialog.findViewById(R.id.textViewSSID);
         TextView textViewPassword = (TextView) connectNetworkDialog.findViewById(R.id.textViewPassword);
