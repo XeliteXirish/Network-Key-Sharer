@@ -2,27 +2,42 @@ package com.XeliteXirish.NetworkKeySharer.ui.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.PointF;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.XeliteXirish.NetworkKeySharer.R;
-import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.BeepManager;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.CompoundBarcodeView;
 
 import java.util.List;
 
-public class QrCodeReaderActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener{
+public class QrCodeReaderActivity extends AppCompatActivity{
 
-    public QRCodeReaderView qrCodeReaderView;
+    public BeepManager beepManager;
+    public CompoundBarcodeView barcodeView;
+    public BarcodeCallback callback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(BarcodeResult result) {
+            if(result.getText() != null){
+                handleDecode(result);
+            }
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> resultPoints) {
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,40 +46,35 @@ public class QrCodeReaderActivity extends AppCompatActivity implements QRCodeRea
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
-        this.qrCodeReaderView = (QRCodeReaderView) findViewById(R.id.qrReaderView);
-        this.qrCodeReaderView.setOnQRCodeReadListener(this);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        //removeHome("EULXCKQY");
+        this.beepManager = new BeepManager(this);
+
+        this.barcodeView = (CompoundBarcodeView) findViewById(R.id.barcode_scanner);
+        this.barcodeView.decodeSingle(callback);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        qrCodeReaderView.getCameraManager().startPreview();
+        barcodeView.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        qrCodeReaderView.getCameraManager().stopPreview();
+        barcodeView.pause();
     }
 
-    @Override
-    public void onQRCodeRead(String encoded, PointF[] points) {
+    public void handleDecode(BarcodeResult barcodeResult){
+        barcodeView.pause();
+        String encoded = barcodeResult.getText();
+        this.beepManager.playBeepSoundAndVibrate();
+
         showConfirmationBox(getDataFromQr(encoded));
-    }
-
-    @Override
-    public void cameraNotFound() {
-
-    }
-
-    @Override
-    public void QRCodeNotFoundOnCamImage() {
-
     }
 
     // WIFI:T:WPA;S:mynetwork;P:mypass;;
@@ -100,20 +110,19 @@ public class QrCodeReaderActivity extends AppCompatActivity implements QRCodeRea
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         connectToWifi(details);
+                        barcodeView.decodeSingle(callback);
                     }
                 })
                 .setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
+                        barcodeView.resume();
+                        barcodeView.decodeSingle(callback);
                     }
                 })
                 .create();
-        if(connectNetworkDialog.isShowing()) {
-
-        }else{
             connectNetworkDialog.show();
-        }
 
         TextView textViewSSID = (TextView) connectNetworkDialog.findViewById(R.id.textViewSSID);
         TextView textViewPassword = (TextView) connectNetworkDialog.findViewById(R.id.textViewPassword);
@@ -184,4 +193,5 @@ public class QrCodeReaderActivity extends AppCompatActivity implements QRCodeRea
             }
         }
     }
+
 }

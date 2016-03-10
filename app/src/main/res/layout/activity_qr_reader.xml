@@ -22,9 +22,11 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.dlazaro66.qrcodereaderview.QRCodeReaderView
-        android:id="@+id/qrReaderView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <com.journeyapps.barcodescanner.CompoundBarcodeView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/barcode_scanner"
+        android:layout_gravity="center_horizontal" />
+
 
 </LinearLayout>
