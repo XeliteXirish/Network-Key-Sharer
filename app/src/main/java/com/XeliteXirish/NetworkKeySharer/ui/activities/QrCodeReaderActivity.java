@@ -47,6 +47,7 @@ public class QrCodeReaderActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -70,12 +71,16 @@ public class QrCodeReaderActivity extends AppCompatActivity{
         barcodeView.pause();
     }
 
-    public void handleDecode(BarcodeResult barcodeResult){
+    public void handleDecode(BarcodeResult barcodeResult) {
         barcodeView.pause();
-        String encoded = barcodeResult.getText();
+        String rawText = barcodeResult.getText();
         this.beepManager.playBeepSoundAndVibrate();
-
-        showConfirmationBox(getDataFromQr(encoded));
+        if (isNetworkCode(rawText)) {
+            showConfirmationBox(getDataFromQr(rawText));
+        }else{
+            barcodeView.resume();
+            barcodeView.decodeSingle(callback);
+        }
     }
 
     // WIFI:T:WPA;S:mynetwork;P:mypass;;
@@ -89,14 +94,30 @@ public class QrCodeReaderActivity extends AppCompatActivity{
         details[0] = authSplit[2];
 
         //Password
-        String[] passwordSplit = parts[1].split(":");
-        details[2] = passwordSplit[1];
+        if(!details[0].equalsIgnoreCase("nopass")) {
+            String[] passwordSplit = parts[1].split(":");
+            details[2] = passwordSplit[1];
+        }
 
         //SSID
-        String[] ssidSplit = parts[2].split(":");
-        details[1] = ssidSplit[1];
+        if(!details[0].equalsIgnoreCase("nopass")) {
+            String[] ssidSplit = parts[2].split(":");
+            details[1] = ssidSplit[1];
+        }else{
+            String[] ssidSplitOpen = parts[1].split(":");
+            details[1] = ssidSplitOpen[1];
+        }
 
         return details;
+    }
+
+    public boolean isNetworkCode(String rawText) {
+        if (rawText.startsWith("WIFI:")) {
+            return true;
+        } else {
+            Toast.makeText(this, "No network found in QrCode", Toast.LENGTH_SHORT).show();
+            return false;
+        }
     }
 
     public void showConfirmationBox(final String[] details){
@@ -131,7 +152,11 @@ public class QrCodeReaderActivity extends AppCompatActivity{
 
         textViewSSID.setText(networkSSID);
         textViewPassword.setText(networkPassword);
-        textViewAuth.setText(networkAuth);
+        if(!networkAuth.equalsIgnoreCase("nopass")) {
+            textViewAuth.setText(networkAuth);
+        }else{
+            textViewAuth.setText("Open");
+        }
     }
 
     public void connectToWifi(String[] details){

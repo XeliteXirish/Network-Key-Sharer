@@ -108,17 +108,12 @@ public class NetworkAdapter extends RecyclerView.Adapter<NetworkAdapter.ViewHold
             Random random = new Random();
             if (NetworkKeySharerApp.ENABLE_ADS) {
                 if (interstitialAd.isLoaded()) {
-                    if(random.nextInt(5) == 0) {
+                    if (random.nextInt(5) == 0) {
                         interstitialAd.show();
-                    }else{
-                        continueOnClick();
                     }
-                }else{
-                    continueOnClick();
                 }
-            }else {
-                continueOnClick();
             }
+            continueOnClick();
         }
 
         public void continueOnClick(){
