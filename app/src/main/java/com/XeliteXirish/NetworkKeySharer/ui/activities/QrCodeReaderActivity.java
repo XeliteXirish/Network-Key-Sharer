@@ -2,12 +2,15 @@ package com.XeliteXirish.NetworkKeySharer.ui.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.hardware.Camera;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -38,6 +41,7 @@ public class QrCodeReaderActivity extends AppCompatActivity{
         public void possibleResultPoints(List<ResultPoint> resultPoints) {
         }
     };
+//    public FloatingActionButton fabTorch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,13 @@ public class QrCodeReaderActivity extends AppCompatActivity{
         this.barcodeView = (CompoundBarcodeView) findViewById(R.id.barcode_scanner);
         this.barcodeView.decodeSingle(callback);
 
+       /* this.fabTorch = (FloatingActionButton) findViewById(R.id.fabTorch);
+        this.fabTorch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleTorch();
+            }
+        });*/
     }
 
     @Override
@@ -207,6 +218,15 @@ public class QrCodeReaderActivity extends AppCompatActivity{
                 break;
             }
         }
+    }
+
+    public void toggleTorch(){
+        Camera camera = Camera.open();
+        Camera.Parameters parameters = camera.getParameters();
+
+        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        camera.setParameters(parameters);
+        camera.startPreview();
     }
 
     public void removeHome(String ssid){
