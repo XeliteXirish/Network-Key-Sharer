@@ -100,8 +100,7 @@ public class NetworkListActivity extends AppCompatActivity {
         rvWifiNetworks.setLayoutManager(new LinearLayoutManager(this));
 
         // Separator
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(
-                this, DividerItemDecoration.VERTICAL_LIST);
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         rvWifiNetworks.addItemDecoration(itemDecoration);
         rvWifiNetworks.setHasFixedSize(true);
         rvWifiNetworks.setItemAnimator(new DefaultItemAnimator());
